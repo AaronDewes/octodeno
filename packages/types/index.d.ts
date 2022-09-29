@@ -1,6 +1,8 @@
 export { EndpointInterface, KnownEndpointParameters } from "./endpoint";
 import { RequestInterface } from "./request";
 export { RequestInterface } from "./request";
+import { GraphqlInterface } from "./graphql";
+export { GraphqlInterface, GraphQlQueryResponseData } from "./graphql";
 
 interface AuthStrategyInterface {
   (options?: any): AuthInterface;
@@ -295,7 +297,7 @@ export declare class Octokit<
    */
   static withPlugins<
     Class extends ClassWithPlugins,
-    Plugins extends [Plugin, ...Plugin[]]
+    Plugins extends [OctokitPlugin, ...OctokitPlugin[]]
   >(
     this: Class,
     plugins: Plugins
@@ -368,7 +370,7 @@ export declare class Octokit<
   /**
    * List of plugins that will be applied to all instances
    */
-  static plugins: Plugin[];
+  static plugins: OctokitPlugin[];
 
   /**
    * Default options that will be applied to all instances
@@ -406,6 +408,11 @@ export declare class Octokit<
    * Send a request, with type support for GitHub's REST API.
    */
   request: RequestInterface<TVersion>;
+
+  /**
+   * Send a GraphQL query
+   */
+  graphql: GraphqlInterface<TVersion>;
 }
 
 /**
@@ -441,7 +448,7 @@ export type ExtendOctokitWith<
     defaults: OrObject<OctokitExtensions["defaults"], undefined>;
   };
 
-export declare type Plugin = (
+export declare type OctokitPlugin = (
   instance: Octokit,
   options: Octokit.Options
 ) => ApiExtension | void;
@@ -472,7 +479,7 @@ declare type ReturnTypeOf<T extends AnyFunction | AnyFunction[]> =
     : never;
 
 type ClassWithPlugins = Constructor<any> & {
-  plugins: Plugin[];
+  plugins: OctokitPlugin[];
 };
 
 type RemainingRequirements<
@@ -527,13 +534,13 @@ type ConstructorRequiringOptionsIfNeeded<
 
 type Extensions = {
   defaults?: {};
-  plugins?: Plugin[];
+  plugins?: OctokitPlugin[];
 };
 
 type OrObject<T, Extender> = T extends Extender ? {} : T;
 
-type ApplyPlugins<Plugins extends Plugin[] | undefined> =
-  Plugins extends Plugin[]
+type ApplyPlugins<Plugins extends OctokitPlugin[] | undefined> =
+  Plugins extends OctokitPlugin[]
     ? UnionToIntersection<ReturnType<Plugins[number]>>
     : {};
 
