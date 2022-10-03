@@ -60,6 +60,11 @@ A list of breaking changes compared to latest `@octokit/*` modules
 
 - `@octokit/openapi-types` will be renamed to `@octokit/types-openapi` to be consistents with the `@octokit/types-*` prefixed packages that only contain types
 
+## Notes for later
+
+- replace `request.defaults()` and `endpoint.defaults()` with `request.withDefaults()` and `endpoint.withDefaults()`
+- remove `options.previews` from `new Octokit(options)`
+
 ## Known issues
 
 - Constructor option Types (`options.auth`) are not set correctly when `authStrategy` is set via `.withDefaults({ authStrategy })` ([#20](https://github.com/octokit/octokit-next.js/issues/20))
